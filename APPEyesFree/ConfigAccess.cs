@@ -17,7 +17,7 @@ namespace APPEyesFree
         {
             var config = new Config
             {
-                Server = GetConnectionServer(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString),
+                Server = GetConnectionStringBuilder().DataSource,
                 Language = ConfigurationManager.AppSettings["language"],
                 Rate = Convert.ToInt32(ConfigurationManager.AppSettings["rate"]),
                 Volume = Convert.ToInt32(ConfigurationManager.AppSettings["volume"]),
@@ -48,14 +48,22 @@ namespace APPEyesFree
         }
 
         /// <summary>
-        /// Connection Server取得
+        /// Connection Builder取得
         /// </summary>
         /// <param name="connectionString">connectionString</param>
         /// <returns></returns>
-        private static string GetConnectionServer(string connectionString)
+        public static SqlConnectionStringBuilder GetConnectionStringBuilder()
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connectionString);
-            return builder.DataSource;
+            return new SqlConnectionStringBuilder(GetConnectionString());;
+        }
+
+        /// <summary>
+        /// ConnectionString取得
+        /// </summary>
+        /// <returns></returns>
+        private static string GetConnectionString()
+        {
+            return ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
         }
 
         /// <summary>
@@ -65,7 +73,9 @@ namespace APPEyesFree
         /// <returns></returns>
         private static string SetConnectionString(string server)
         {
-            return string.Format("Server={0};Database=EyesFree;User ID=eipmgr; password=eipmgr", server);
+            var builder = GetConnectionStringBuilder();
+            builder.DataSource = server;
+            return builder.ConnectionString;
         }
     }
 }

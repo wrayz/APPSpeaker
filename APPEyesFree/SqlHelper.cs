@@ -32,6 +32,7 @@ namespace APPEyesFree
                     try
                     {
                         _connection.Open();
+                        _connection.Close();
                     }
                     catch (Exception ex)
                     {

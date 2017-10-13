@@ -59,7 +59,11 @@ namespace APPEyesFree
         /// <param name="e"></param>
         private void button_test_connection_Click(object sender, EventArgs e)
         {
-            string connectionString = string.Format("Server={0};Database=EyesFree;User ID=eipmgr; password=eipmgr", textBox_source_server.Text);
+            var builder = ConfigAccess.GetConnectionStringBuilder();
+            //修改實體
+            builder.DataSource = textBox_source_server.Text;
+            string connectionString = builder.ConnectionString;
+
             try
             {
                 SqlHelper helper = new SqlHelper(connectionString);
@@ -81,12 +85,8 @@ namespace APPEyesFree
         {
             //切換狀態
             _isOn = !_isOn;
-            //啟用按鈕文字內容
-            button_start.Text = _isOn ? "&Stop" : "&Start";
-            //設定功能
-            tabPage_settings.Enabled = !_isOn;
-            //log textbox 加入啟用敘述
-            textBox_log.AppendText((_isOn ? "Alarm actived." : "Alarm stopped.") + Environment.NewLine);
+            //應用程式狀態
+            SetStatus();
 
             //語音告警程序
             if (_isOn && !_thread.IsAlive)
@@ -161,6 +161,9 @@ namespace APPEyesFree
             }
             catch (Exception ex)
             {
+                _isOn = false;
+                //應用程式狀態
+                SetStatus();
                 MessageBox.Show(ex.Message, "Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -180,6 +183,19 @@ namespace APPEyesFree
                 //Log新增
                 textBox_log.AppendText(string.Format("{0} {1} {2}", device.DEVICE_NAME, device.ERROR_INFO, device.ERROR_TIME) + Environment.NewLine);
             }
+        }
+
+        /// <summary>
+        /// 應用程式狀態
+        /// </summary>
+        private void SetStatus()
+        {
+            //啟用按鈕文字內容
+            button_start.Text = _isOn ? "&Stop" : "&Start";
+            //設定功能
+            tabPage_settings.Enabled = !_isOn;
+            //log textbox 加入啟用敘述
+            textBox_log.AppendText((_isOn ? "Alarm actived." : "Alarm stopped.") + Environment.NewLine);
         }
     }
 }
