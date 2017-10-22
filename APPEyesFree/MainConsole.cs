@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -20,59 +21,15 @@ namespace APPEyesFree
         public MainConsole()
         {
             InitializeComponent();
-            InitializeConfig();
-            _thread = new Thread(Speech);
-        }
-
-        /// <summary>
-        /// 設置儲存按鈕事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void button_save_Click(object sender, EventArgs e)
-        {
-            try
+            //版本資訊
+            this.textBox_log.AppendText("EyesFree Ver1.0" + Environment.NewLine);
+            //資料連線設定彈跳視窗
+            using (var dialog = new ConnectionSettings())
             {
-                var config = new Config
-                {
-                    Server = textBox_source_server.Text,
-                    Language = comboBox_language.SelectedValue.ToString(),
-                    Rate = Convert.ToInt32(numericUpDown_rate.Value),
-                    Volume = Convert.ToInt32(numericUpDown_volume.Value),
-                    IncludeFix = checkBox_include_fix.Checked ? "Y" : "N"
-                };
-
-                ConfigAccess.ModifyConfig(config);
-
-                MessageBox.Show("Setting Saved.", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        /// <summary>
-        /// 連線測試
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void button_test_connection_Click(object sender, EventArgs e)
-        {
-            var builder = ConfigAccess.GetConnectionStringBuilder();
-            //修改實體
-            builder.DataSource = textBox_source_server.Text;
-            string connectionString = builder.ConnectionString;
-
-            try
-            {
-                SqlHelper helper = new SqlHelper(connectionString);
-                if (helper.IsConnection)
-                    MessageBox.Show("Test connection succeed.", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //位置置中
+                dialog.StartPosition = FormStartPosition.CenterParent;
+                //彈跳視窗開啟
+                dialog.ShowDialog(this);
             }
         }
 
@@ -81,26 +38,51 @@ namespace APPEyesFree
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void button_start_Click(object sender, EventArgs e)
+        private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //切換狀態
-            _isOn = !_isOn;
+            _isOn = true;
             //應用程式狀態
             SetStatus();
 
-            //語音告警程序
-            if (_isOn && !_thread.IsAlive)
-            {
-                //語音告警程序啟用
-                _thread.Start();
-            }
-            else
-            {
-                //語音告警程序中止
-                _thread.Abort();
-                //重設thread
-                _thread = new Thread(Speech);
-            }
+            //語音告警程序啟用
+            _thread = new Thread(Speech);
+            _thread.Start();
+
+            ////切換狀態
+            //_isOn = !_isOn;
+            ////應用程式狀態
+            //SetStatus();
+
+            ////語音告警程序
+            //if (_isOn && !_thread.IsAlive)
+            //{
+            //    //語音告警程序啟用
+            //    _thread.Start();
+            //}
+            //else
+            //{
+            //    //語音告警程序中止
+            //    _thread.Abort();
+            //    //重設thread
+            //    _thread = new Thread(Speech);
+            //}
+        }
+
+        /// <summary>
+        /// 語音告警停止
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void stopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //語音告警程序中止
+            _thread.Abort();
+
+            //切換狀態
+            _isOn = false;
+            //應用程式狀態
+            SetStatus();
         }
 
         /// <summary>
@@ -108,7 +90,7 @@ namespace APPEyesFree
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void button_clear_Click(object sender, EventArgs e)
+        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             textBox_log.Clear();
         }
@@ -118,8 +100,12 @@ namespace APPEyesFree
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void button_exit_Click(object sender, EventArgs e)
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //告警程序終止
+            if (_thread != null)
+                _thread.Abort();
+
             Application.Exit();
         }
 
@@ -128,17 +114,18 @@ namespace APPEyesFree
         /// </summary>
         private void Speech()
         {
-            var config = ConfigAccess.GetConfig();
-
-            var dao = new DataAccess();
-
-            TTSService tts = new TTSService(config);
+            TTSService tts = new TTSService();
 
             try
             {
                 while (true)
                 {
-                    var devices = dao.GetErrorDevices();
+                    //設定
+                    var config = DataAccess.GetConfig();
+                    tts.SetConfig(config);
+
+                    //設備資料
+                    var devices = DataAccess.GetErrorDevices();
                     //更新log 訊息
                     if (textBox_log.InvokeRequired)
                     {
@@ -152,7 +139,7 @@ namespace APPEyesFree
                         devices = devices.Where(device => device.DEVICE_STATUS == "E");
 
                     var builders = TextBuilder.TextConvert(devices, tts.Culture);
-                    tts.Speech(builders);
+                    tts.Speech(config, builders);
                 }
             }
             catch (ThreadAbortException ex)
@@ -161,9 +148,6 @@ namespace APPEyesFree
             }
             catch (Exception ex)
             {
-                _isOn = false;
-                //應用程式狀態
-                SetStatus();
                 MessageBox.Show(ex.Message, "Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -190,12 +174,28 @@ namespace APPEyesFree
         /// </summary>
         private void SetStatus()
         {
-            //啟用按鈕文字內容
-            button_start.Text = _isOn ? "&Stop" : "&Start";
-            //設定功能
-            tabPage_settings.Enabled = !_isOn;
+            //啟用按鈕可否使用
+            startToolStripMenuItem.Enabled = !_isOn;
+            //啟用按鈕可否使用
+            stopToolStripMenuItem.Enabled = _isOn;
             //log textbox 加入啟用敘述
             textBox_log.AppendText((_isOn ? "Alarm actived." : "Alarm stopped.") + Environment.NewLine);
+        }
+
+        /// <summary>
+        /// 設置彈跳視窗
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new SettingsDialog())
+            {
+                //位置置中
+                dialog.StartPosition = FormStartPosition.CenterParent;
+                //彈跳視窗開啟
+                dialog.ShowDialog(this);
+            }
         }
     }
 }

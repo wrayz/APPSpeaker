@@ -6,11 +6,6 @@
     public class Config
     {
         /// <summary>
-        /// 資料庫Server
-        /// </summary>
-        public string Server { get; set; }
-
-        /// <summary>
         /// 語言
         /// </summary>
         public string Language { get; set; }

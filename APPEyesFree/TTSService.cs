@@ -37,12 +37,20 @@ namespace APPEyesFree
         /// 建構式
         /// </summary>
         /// <param name="config"></param>
-        public TTSService(Config config)
+        public TTSService()
+        {
+            //語音物件
+            _synth = new SpeechSynthesizer();
+        }
+
+        /// <summary>
+        /// 語音設置
+        /// </summary>
+        /// <param name="config"></param>
+        public void SetConfig(Config config)
         {
             //語言
             Language = config.Language;
-            //語音物件
-            _synth = new SpeechSynthesizer();
             //語音速度
             _synth.Rate = config.Rate.Value;
             //語音音量
@@ -83,7 +91,7 @@ namespace APPEyesFree
         /// 語音發出
         /// </summary>
         /// <param name="builders">文字內容物件</param>
-        public void Speech(List<PromptBuilder> builders)
+        public void Speech(Config config, List<PromptBuilder> builders)
         {
             //語音
             foreach (var builder in builders)
