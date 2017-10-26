@@ -50,7 +50,7 @@ namespace APPEyesFree
             this.settingsToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(610, 24);
+            this.menuStrip.Size = new System.Drawing.Size(672, 24);
             this.menuStrip.TabIndex = 1;
             this.menuStrip.Text = "menuStrip";
             // 
@@ -109,26 +109,31 @@ namespace APPEyesFree
             // 
             // textBox_log
             // 
-            this.textBox_log.BackColor = System.Drawing.SystemColors.WindowText;
-            this.textBox_log.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox_log.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.textBox_log.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox_log.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox_log.ForeColor = System.Drawing.SystemColors.Window;
-            this.textBox_log.Location = new System.Drawing.Point(0, 27);
+            this.textBox_log.Location = new System.Drawing.Point(0, 24);
             this.textBox_log.Multiline = true;
             this.textBox_log.Name = "textBox_log";
-            this.textBox_log.Size = new System.Drawing.Size(610, 227);
+            this.textBox_log.ReadOnly = true;
+            this.textBox_log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox_log.Size = new System.Drawing.Size(672, 449);
             this.textBox_log.TabIndex = 8;
             // 
             // MainConsole
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(610, 254);
+            this.ClientSize = new System.Drawing.Size(672, 473);
             this.Controls.Add(this.textBox_log);
             this.Controls.Add(this.menuStrip);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(450, 300);
             this.Name = "MainConsole";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EyesFree";
+            this.Load += new System.EventHandler(this.MainConsole_Load);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.ResumeLayout(false);

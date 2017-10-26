@@ -1,10 +1,8 @@
 ﻿using Microsoft.Speech.Synthesis;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace APPEyesFree
 {
@@ -30,9 +28,8 @@ namespace APPEyesFree
                 {
                     PromptBuilder builder = new PromptBuilder(culture);
 
-                    if (device.ERROR_INFO == "")
-                        device.ERROR_INFO = "異常";
-
+                    if (string.IsNullOrEmpty(device.ERROR_INFO))
+                        device.ERROR_INFO = MessageFactory.GetDefaultMessage(culture);
 
                     //過濾特殊字元
                     string name = Regex.Replace(device.DEVICE_NAME, @"[\W_]+", " ");

@@ -157,6 +157,7 @@ namespace APPEyesFree
             this.Controls.Add(this.comboBox_language);
             this.Controls.Add(this.checkBox_include_fix);
             this.Controls.Add(this.button_save);
+            this.MaximizeBox = false;
             this.Name = "SettingsDialog";
             this.Text = "Settings";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_rate)).EndInit();

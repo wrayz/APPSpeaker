@@ -83,6 +83,7 @@
     <Compile Include="MainConsole.Designer.cs">
       <DependentUpon>MainConsole.cs</DependentUpon>
     </Compile>
+    <Compile Include="MessageFactory.cs" />
     <Compile Include="Model\Config.cs" />
     <Compile Include="Model\Device.cs" />
     <Compile Include="Model\Voice.cs" />

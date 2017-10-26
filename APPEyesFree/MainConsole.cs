@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -23,6 +22,17 @@ namespace APPEyesFree
             InitializeComponent();
             //版本資訊
             this.textBox_log.AppendText("EyesFree Ver1.0" + Environment.NewLine);
+            //視窗關閉事件
+            this.FormClosing += MainConsole_FormClosing;
+        }
+
+        /// <summary>
+        /// 主視窗初始事件 (開啟資料庫連線設定)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainConsole_Load(object sender, EventArgs e)
+        {
             //資料連線設定彈跳視窗
             using (var dialog = new ConnectionSettings())
             {
@@ -31,6 +41,21 @@ namespace APPEyesFree
                 //彈跳視窗開啟
                 dialog.ShowDialog(this);
             }
+
+            //開啟語音告警
+            startToolStripMenuItem_Click(sender, e);
+        }
+
+        /// <summary>
+        /// 主視窗關閉事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MainConsole_FormClosing(object sender, EventArgs e)
+        {
+            //告警程序終止
+            if (_thread != null)
+                _thread.Abort();
         }
 
         /// <summary>
@@ -48,25 +73,6 @@ namespace APPEyesFree
             //語音告警程序啟用
             _thread = new Thread(Speech);
             _thread.Start();
-
-            ////切換狀態
-            //_isOn = !_isOn;
-            ////應用程式狀態
-            //SetStatus();
-
-            ////語音告警程序
-            //if (_isOn && !_thread.IsAlive)
-            //{
-            //    //語音告警程序啟用
-            //    _thread.Start();
-            //}
-            //else
-            //{
-            //    //語音告警程序中止
-            //    _thread.Abort();
-            //    //重設thread
-            //    _thread = new Thread(Speech);
-            //}
         }
 
         /// <summary>

@@ -143,6 +143,7 @@
             this.Controls.Add(this.textBox_password);
             this.Controls.Add(this.button_test_connection);
             this.Controls.Add(this.button_save);
+            this.MaximizeBox = false;
             this.Name = "ConnectionSettings";
             this.Text = "Connection";
             this.ResumeLayout(false);
