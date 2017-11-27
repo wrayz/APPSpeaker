@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-namespace APPEyesFree
+﻿namespace APPEyesFree
 {
     partial class MainConsole
     {
