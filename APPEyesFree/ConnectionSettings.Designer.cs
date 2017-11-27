@@ -76,14 +76,6 @@
             this.label_password.TabIndex = 35;
             this.label_password.Text = "Password";
             // 
-            // textBox_server
-            // 
-            this.textBox_server.Location = new System.Drawing.Point(85, 15);
-            this.textBox_server.Name = "textBox_server";
-            this.textBox_server.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
-            this.textBox_server.Size = new System.Drawing.Size(180, 22);
-            this.textBox_server.TabIndex = 41;
-            // 
             // textBox_database
             // 
             this.textBox_database.Location = new System.Drawing.Point(85, 45);
@@ -104,6 +96,7 @@
             // 
             this.textBox_password.Location = new System.Drawing.Point(85, 105);
             this.textBox_password.Name = "textBox_password";
+            this.textBox_password.PasswordChar = '*';
             this.textBox_password.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
             this.textBox_password.Size = new System.Drawing.Size(130, 22);
             this.textBox_password.TabIndex = 38;
@@ -127,6 +120,14 @@
             this.button_save.Text = "&Connect";
             this.button_save.UseVisualStyleBackColor = true;
             this.button_save.Click += new System.EventHandler(this.button_save_Click);
+            // 
+            // textBox_server
+            // 
+            this.textBox_server.Location = new System.Drawing.Point(85, 15);
+            this.textBox_server.Name = "textBox_server";
+            this.textBox_server.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.textBox_server.Size = new System.Drawing.Size(180, 22);
+            this.textBox_server.TabIndex = 41;
             // 
             // ConnectionSettings
             // 
