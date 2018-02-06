@@ -130,13 +130,25 @@ namespace APPEyesFree
                     var config = DataAccess.GetConfig();
                     tts.SetConfig(config);
 
+                    //簡易異常設備資料
+                    var simpleDevices = DataAccess.GetSimpleErrorDevices();
                     //設備資料
                     var devices = DataAccess.GetErrorDevices();
 
                     if (config.IncludeFix == "N")
                         devices = devices.Where(device => device.DEVICE_STATUS == "E");
 
-                    foreach (var device in devices)
+                    //設備告警播放清單
+                    var speechList = new List<Device>();
+                    //簡易異常設備加入
+                    for (var i = 0; i < config.SpeechCycle.Value; i++)
+                    {
+                        speechList.AddRange(simpleDevices);
+                    }
+                    //一般異常設備加入
+                    speechList.AddRange(devices);
+
+                    foreach (var device in speechList)
                     {
                         //更新log 訊息
                         if (textBox_log.InvokeRequired)

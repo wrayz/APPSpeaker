@@ -32,15 +32,18 @@ namespace APPEyesFree
             this.label_language = new System.Windows.Forms.Label();
             this.label_rate = new System.Windows.Forms.Label();
             this.label_volume = new System.Windows.Forms.Label();
+            this.label_cycle = new System.Windows.Forms.Label();
             this.comboBox_language = new System.Windows.Forms.ComboBox();
             this.numericUpDown_rate = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown_volume = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown_cycle = new System.Windows.Forms.NumericUpDown();
             this.checkBox_include_fix = new System.Windows.Forms.CheckBox();
             this.button_connection = new System.Windows.Forms.Button();
             this.button_save = new System.Windows.Forms.Button();
             this.button_cancel = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_rate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_volume)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_cycle)).BeginInit();
             this.SuspendLayout();
             // 
             // label_language
@@ -69,6 +72,15 @@ namespace APPEyesFree
             this.label_volume.Size = new System.Drawing.Size(42, 12);
             this.label_volume.TabIndex = 25;
             this.label_volume.Text = "Volume";
+            // 
+            // label_cycle
+            // 
+            this.label_cycle.AutoSize = true;
+            this.label_cycle.Location = new System.Drawing.Point(33, 105);
+            this.label_cycle.Name = "label_cycle";
+            this.label_cycle.Size = new System.Drawing.Size(32, 12);
+            this.label_cycle.TabIndex = 30;
+            this.label_cycle.Text = "Cycle";
             // 
             // comboBox_language
             // 
@@ -102,10 +114,17 @@ namespace APPEyesFree
             this.numericUpDown_volume.Size = new System.Drawing.Size(62, 22);
             this.numericUpDown_volume.TabIndex = 26;
             // 
+            // numericUpDown_cycle
+            // 
+            this.numericUpDown_cycle.Location = new System.Drawing.Point(80, 105);
+            this.numericUpDown_cycle.Name = "numericUpDown_cycle";
+            this.numericUpDown_cycle.Size = new System.Drawing.Size(62, 22);
+            this.numericUpDown_cycle.TabIndex = 31;
+            // 
             // checkBox_include_fix
             // 
             this.checkBox_include_fix.AutoSize = true;
-            this.checkBox_include_fix.Location = new System.Drawing.Point(16, 105);
+            this.checkBox_include_fix.Location = new System.Drawing.Point(12, 133);
             this.checkBox_include_fix.Name = "checkBox_include_fix";
             this.checkBox_include_fix.Size = new System.Drawing.Size(127, 16);
             this.checkBox_include_fix.TabIndex = 20;
@@ -114,7 +133,7 @@ namespace APPEyesFree
             // 
             // button_connection
             // 
-            this.button_connection.Location = new System.Drawing.Point(12, 135);
+            this.button_connection.Location = new System.Drawing.Point(12, 158);
             this.button_connection.Name = "button_connection";
             this.button_connection.Size = new System.Drawing.Size(100, 25);
             this.button_connection.TabIndex = 28;
@@ -124,7 +143,7 @@ namespace APPEyesFree
             // 
             // button_save
             // 
-            this.button_save.Location = new System.Drawing.Point(129, 135);
+            this.button_save.Location = new System.Drawing.Point(129, 158);
             this.button_save.Name = "button_save";
             this.button_save.Size = new System.Drawing.Size(75, 25);
             this.button_save.TabIndex = 19;
@@ -134,7 +153,7 @@ namespace APPEyesFree
             // 
             // button_cancel
             // 
-            this.button_cancel.Location = new System.Drawing.Point(210, 135);
+            this.button_cancel.Location = new System.Drawing.Point(210, 158);
             this.button_cancel.Name = "button_cancel";
             this.button_cancel.Size = new System.Drawing.Size(75, 25);
             this.button_cancel.TabIndex = 29;
@@ -146,13 +165,15 @@ namespace APPEyesFree
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(302, 173);
+            this.ClientSize = new System.Drawing.Size(302, 195);
             this.Controls.Add(this.button_cancel);
             this.Controls.Add(this.button_connection);
             this.Controls.Add(this.numericUpDown_volume);
             this.Controls.Add(this.label_volume);
             this.Controls.Add(this.numericUpDown_rate);
             this.Controls.Add(this.label_rate);
+            this.Controls.Add(this.label_cycle);
+            this.Controls.Add(this.numericUpDown_cycle);
             this.Controls.Add(this.label_language);
             this.Controls.Add(this.comboBox_language);
             this.Controls.Add(this.checkBox_include_fix);
@@ -162,6 +183,7 @@ namespace APPEyesFree
             this.Text = "Settings";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_rate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_volume)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_cycle)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -172,9 +194,11 @@ namespace APPEyesFree
         private System.Windows.Forms.Label label_language;
         private System.Windows.Forms.Label label_rate;
         private System.Windows.Forms.Label label_volume;
+        private System.Windows.Forms.Label label_cycle;
         private System.Windows.Forms.ComboBox comboBox_language;
         private System.Windows.Forms.NumericUpDown numericUpDown_rate;
         private System.Windows.Forms.NumericUpDown numericUpDown_volume;
+        private System.Windows.Forms.NumericUpDown numericUpDown_cycle;
         private System.Windows.Forms.CheckBox checkBox_include_fix;
         private System.Windows.Forms.Button button_connection;
         private System.Windows.Forms.Button button_save;

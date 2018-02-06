@@ -29,6 +29,8 @@ namespace APPEyesFree
             this.numericUpDown_rate.Value = config.Rate.Value;
             //音量
             this.numericUpDown_volume.Value = Convert.ToInt32(config.Volume);
+            //簡易告警循環次數
+            this.numericUpDown_cycle.Value = Convert.ToInt32(config.SpeechCycle);
             //修復時是否告警
             this.checkBox_include_fix.Checked = config.IncludeFix == "Y";
         }
@@ -77,6 +79,7 @@ namespace APPEyesFree
                     Language = comboBox_language.SelectedValue.ToString(),
                     Rate = Convert.ToInt32(numericUpDown_rate.Value),
                     Volume = Convert.ToInt32(numericUpDown_volume.Value),
+                    SpeechCycle = Convert.ToInt32(numericUpDown_cycle.Value),
                     IncludeFix = checkBox_include_fix.Checked ? "Y" : "N"
                 };
 

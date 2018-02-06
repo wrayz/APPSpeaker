@@ -24,5 +24,10 @@
         /// 是否包含修復中設備
         /// </summary>
         public string IncludeFix { get; set; }
+
+        /// <summary>
+        /// 簡易告警循環次數
+        /// </summary>
+        public int? SpeechCycle { get; set; }
     }
 }
