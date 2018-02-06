@@ -132,20 +132,24 @@ namespace APPEyesFree
 
                     //設備資料
                     var devices = DataAccess.GetErrorDevices();
-                    //更新log 訊息
-                    if (textBox_log.InvokeRequired)
-                    {
-                        this.Invoke((MethodInvoker)delegate
-                        {
-                            UpdateTextBox(devices);
-                        });
-                    }
 
                     if (config.IncludeFix == "N")
                         devices = devices.Where(device => device.DEVICE_STATUS == "E");
 
-                    var builders = TextBuilder.TextConvert(devices, tts.Culture);
-                    tts.Speech(config, builders);
+                    foreach (var device in devices)
+                    {
+                        //更新log 訊息
+                        if (textBox_log.InvokeRequired)
+                        {
+                            this.Invoke((MethodInvoker)delegate
+                            {
+                                UpdateTextBox(device);
+                            });
+                        }
+
+                        var builder = TextBuilder.TextConvert(device, tts.Culture);
+                        tts.Speech(builder);
+                    }
                 }
             }
             catch (ThreadAbortException ex)
@@ -165,14 +169,11 @@ namespace APPEyesFree
         /// <summary>
         /// 更新log 訊息
         /// </summary>
-        /// <param name="devices"></param>
-        private void UpdateTextBox(IEnumerable<Device> devices)
+        /// <param name="device">設備資訊</param>
+        private void UpdateTextBox(Device device)
         {
-            foreach (var device in devices)
-            {
-                //Log新增
-                textBox_log.AppendText(string.Format("{0} {1} {2}", device.DEVICE_NAME, device.ERROR_INFO, device.ERROR_TIME) + Environment.NewLine);
-            }
+            //Log新增
+            textBox_log.AppendText(string.Format("{0} {1} {2}", device.DEVICE_NAME, device.ERROR_INFO, device.ERROR_TIME) + Environment.NewLine);
         }
 
         /// <summary>

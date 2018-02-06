@@ -91,13 +91,9 @@ namespace APPEyesFree
         /// 語音發出
         /// </summary>
         /// <param name="builders">文字內容物件</param>
-        public void Speech(Config config, List<PromptBuilder> builders)
+        public void Speech(PromptBuilder builder)
         {
-            //語音
-            foreach (var builder in builders)
-            {
-                _synth.Speak(builder);
-            }
+            _synth.Speak(builder);
         }
 
         /// <summary>

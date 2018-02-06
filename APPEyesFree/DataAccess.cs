@@ -73,7 +73,7 @@ namespace APPEyesFree
             List<Device> list = new List<Device>();
 
             //SQL語句
-            string sql = @"SELECT * FROM dms.VW_ERROR_DEVICES";
+            string sql = @"SELECT * FROM dms.VW_ERROR_DEVICE";
             //SQL執行語法
             SqlCommand cmd = new SqlCommand(sql, connection);
 

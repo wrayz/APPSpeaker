@@ -1,7 +1,5 @@
 ﻿using Microsoft.Speech.Synthesis;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace APPEyesFree
@@ -14,36 +12,27 @@ namespace APPEyesFree
         /// <summary>
         /// 字串轉換語音
         /// </summary>
-        /// <param name="devices"></param>
+        /// <param name="device"></param>
         /// <param name="culture"></param>
         /// <returns></returns>
-        public static List<PromptBuilder> TextConvert(IEnumerable<Device> devices, CultureInfo culture)
+        public static PromptBuilder TextConvert(Device device, CultureInfo culture)
         {
             //語音內容
-            List<PromptBuilder> builders = new List<PromptBuilder>();
+            PromptBuilder builder = new PromptBuilder(culture);
 
-            if (devices.Count() > 0)
-            {
-                foreach (Device device in devices)
-                {
-                    PromptBuilder builder = new PromptBuilder(culture);
+            if (string.IsNullOrEmpty(device.ERROR_INFO))
+                device.ERROR_INFO = MessageFactory.GetDefaultMessage(culture);
 
-                    if (string.IsNullOrEmpty(device.ERROR_INFO))
-                        device.ERROR_INFO = MessageFactory.GetDefaultMessage(culture);
+            //過濾特殊字元
+            string name = Regex.Replace(device.DEVICE_NAME, @"[\W_]+", " ");
+            string info = Regex.Replace(device.ERROR_INFO, @"[\W_]+", " ");
 
-                    //過濾特殊字元
-                    string name = Regex.Replace(device.DEVICE_NAME, @"[\W_]+", " ");
-                    string info = Regex.Replace(device.ERROR_INFO, @"[\W_]+", " ");
+            builder.AppendText(name);
+            builder.AppendBreak(PromptBreak.Small);
+            builder.AppendText(info);
+            builder.AppendBreak(PromptBreak.ExtraSmall);
 
-                    builder.AppendText(name);
-                    builder.AppendBreak(PromptBreak.Small);
-                    builder.AppendText(info);
-
-                    builders.Add(builder);
-                }
-            }
-
-            return builders;
+            return builder;
         }
     }
 }
