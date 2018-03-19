@@ -24,12 +24,12 @@ namespace APPEyesFree
                 device.ERROR_INFO = MessageFactory.GetDefaultMessage(culture);
 
             //過濾特殊字元
-            string name = Regex.Replace(device.DEVICE_NAME, @"[\W_]+", " ");
-            string info = Regex.Replace(device.ERROR_INFO, @"[\W_]+", " ");
+            string name = Regex.Replace(device.DEVICE_NAME, @"[^a-zA-Z0-9\.]+", " ");
+            string info = Regex.Replace(device.ERROR_INFO, @"[^a-zA-Z0-9\.]+", " ");
 
-            builder.AppendText(name);
+            builder.AppendTextWithHint(name, SayAs.NumberCardinal);
             builder.AppendBreak(PromptBreak.Small);
-            builder.AppendText(info);
+            builder.AppendTextWithHint(info, SayAs.NumberCardinal);
             builder.AppendBreak(PromptBreak.ExtraSmall);
 
             return builder;
