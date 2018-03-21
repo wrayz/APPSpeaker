@@ -23,13 +23,9 @@ namespace APPEyesFree
             if (string.IsNullOrEmpty(device.ERROR_INFO))
                 device.ERROR_INFO = MessageFactory.GetDefaultMessage(culture);
 
-            //過濾特殊字元
-            string name = Regex.Replace(device.DEVICE_NAME, @"[^a-zA-Z0-9\.]+", " ");
-            string info = Regex.Replace(device.ERROR_INFO, @"[^a-zA-Z0-9\.]+", " ");
-
-            builder.AppendTextWithHint(name, SayAs.NumberCardinal);
+            builder.AppendTextWithHint(device.DEVICE_NAME, SayAs.NumberCardinal);
             builder.AppendBreak(PromptBreak.Small);
-            builder.AppendTextWithHint(info, SayAs.NumberCardinal);
+            builder.AppendTextWithHint(device.ERROR_INFO, SayAs.NumberCardinal);
             builder.AppendBreak(PromptBreak.ExtraSmall);
 
             return builder;
