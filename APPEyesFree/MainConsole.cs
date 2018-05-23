@@ -21,9 +21,9 @@ namespace APPEyesFree
         {
             InitializeComponent();
             //版本資訊
-            this.textBox_log.AppendText("EyesFree Ver1.0" + Environment.NewLine);
+            textBox_log.AppendText("EyesFree Ver1.0" + Environment.NewLine);
             //視窗關閉事件
-            this.FormClosing += MainConsole_FormClosing;
+            FormClosing += MainConsole_FormClosing;
         }
 
         /// <summary>
@@ -33,17 +33,8 @@ namespace APPEyesFree
         /// <param name="e"></param>
         private void MainConsole_Load(object sender, EventArgs e)
         {
-            //資料連線設定彈跳視窗
-            using (var dialog = new ConnectionSettings())
-            {
-                //位置置中
-                dialog.StartPosition = FormStartPosition.CenterParent;
-                //彈跳視窗開啟
-                dialog.ShowDialog(this);
-            }
-
             //開啟語音告警
-            startToolStripMenuItem_Click(sender, e);
+            StartToolStripMenuItem_Click(sender, e);
         }
 
         /// <summary>
@@ -63,7 +54,7 @@ namespace APPEyesFree
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void startToolStripMenuItem_Click(object sender, EventArgs e)
+        private void StartToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //切換狀態
             _isOn = true;
@@ -80,7 +71,7 @@ namespace APPEyesFree
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void stopToolStripMenuItem_Click(object sender, EventArgs e)
+        private void StopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //語音告警程序中止
             _thread.Abort();
@@ -96,7 +87,7 @@ namespace APPEyesFree
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void clearToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ClearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             textBox_log.Clear();
         }
@@ -106,7 +97,7 @@ namespace APPEyesFree
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //告警程序終止
             if (_thread != null)
@@ -120,7 +111,7 @@ namespace APPEyesFree
         /// </summary>
         private void Speech()
         {
-            TTSService tts = new TTSService();
+            var tts = new TTSService();
 
             try
             {
@@ -130,30 +121,35 @@ namespace APPEyesFree
                     var config = DataAccess.GetConfig();
                     tts.SetConfig(config);
 
-                    //簡易異常設備資料
-                    var simpleDevices = DataAccess.GetSimpleErrorDevices();
-                    //設備資料
-                    var devices = DataAccess.GetErrorDevices();
+                    //告警類型事件紀錄資料
+                    var alarmLogs = DataAccess.GetAlarmLogs();
+                    //數據及狀態類型事件紀錄資料
+                    var eventLogs = DataAccess.GetEventLogs();
 
                     if (config.IncludeFix == "N")
-                        devices = devices.Where(device => device.DEVICE_STATUS == "E");
+                        eventLogs = eventLogs.Where(log => log.IS_REPAIRING == "N");
 
                     //設備告警播放清單
-                    var speechList = new List<Device>();
-                    //簡易異常設備加入
-                    for (var i = 0; i < config.SpeechCycle.Value; i++)
+                    var speechList = new List<EventLog>();
+
+                    //告警類型事件紀錄資料加入
+                    if (alarmLogs.Count() > 0)
                     {
-                        speechList.AddRange(simpleDevices);
+                        for (var i = 0; i < config.SpeechCycle.Value; i++)
+                        {
+                            speechList.AddRange(alarmLogs);
+                        }
                     }
+
                     //一般異常設備加入
-                    speechList.AddRange(devices);
+                    speechList.AddRange(eventLogs);
 
                     foreach (var device in speechList)
                     {
                         //更新log 訊息
                         if (textBox_log.InvokeRequired)
                         {
-                            this.Invoke((MethodInvoker)delegate
+                            Invoke((MethodInvoker)delegate
                             {
                                 UpdateTextBox(device);
                             });
@@ -179,13 +175,13 @@ namespace APPEyesFree
         }
 
         /// <summary>
-        /// 更新log 訊息
+        /// 更新 log 顯示訊息
         /// </summary>
-        /// <param name="device">設備資訊</param>
-        private void UpdateTextBox(Device device)
+        /// <param name="log">紀錄資訊</param>
+        private void UpdateTextBox(EventLog log)
         {
             //Log新增
-            textBox_log.AppendText(string.Format("{0} {1} {2}", device.DEVICE_NAME, device.ERROR_INFO, device.ERROR_TIME) + Environment.NewLine);
+            textBox_log.AppendText(string.Format("{0} {1} {2}", log.DEVICE_NAME, log.LOG_INFO, log.LOG_TIME) + Environment.NewLine);
         }
 
         /// <summary>
@@ -206,7 +202,7 @@ namespace APPEyesFree
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var dialog = new SettingsDialog())
             {

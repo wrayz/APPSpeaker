@@ -1,6 +1,5 @@
 ﻿using Microsoft.Speech.Synthesis;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace APPEyesFree
 {
@@ -12,20 +11,20 @@ namespace APPEyesFree
         /// <summary>
         /// 字串轉換語音
         /// </summary>
-        /// <param name="device"></param>
+        /// <param name="log"></param>
         /// <param name="culture"></param>
         /// <returns></returns>
-        public static PromptBuilder TextConvert(Device device, CultureInfo culture)
+        public static PromptBuilder TextConvert(EventLog log, CultureInfo culture)
         {
             //語音內容
-            PromptBuilder builder = new PromptBuilder(culture);
+            var builder = new PromptBuilder(culture);
 
-            if (string.IsNullOrEmpty(device.ERROR_INFO))
-                device.ERROR_INFO = MessageFactory.GetDefaultMessage(culture);
+            if (string.IsNullOrEmpty(log.LOG_INFO))
+                log.LOG_INFO = MessageFactory.GetDefaultMessage(culture);
 
-            builder.AppendTextWithHint(device.DEVICE_NAME, SayAs.NumberCardinal);
+            builder.AppendTextWithHint(log.DEVICE_NAME, SayAs.NumberCardinal);
             builder.AppendBreak(PromptBreak.Small);
-            builder.AppendTextWithHint(device.ERROR_INFO, SayAs.NumberCardinal);
+            builder.AppendTextWithHint(log.LOG_INFO, SayAs.NumberCardinal);
             builder.AppendBreak(PromptBreak.ExtraSmall);
 
             return builder;

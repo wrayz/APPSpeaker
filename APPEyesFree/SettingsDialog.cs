@@ -24,15 +24,15 @@ namespace APPEyesFree
             SetLanguageList();
 
             //語言
-            this.comboBox_language.SelectedValue = config.Language;
+            comboBox_language.SelectedValue = config.Language;
             //速度
-            this.numericUpDown_rate.Value = config.Rate.Value;
+            numericUpDown_rate.Value = config.Rate.Value;
             //音量
-            this.numericUpDown_volume.Value = Convert.ToInt32(config.Volume);
+            numericUpDown_volume.Value = Convert.ToInt32(config.Volume);
             //簡易告警循環次數
-            this.numericUpDown_cycle.Value = Convert.ToInt32(config.SpeechCycle);
+            numericUpDown_cycle.Value = Convert.ToInt32(config.SpeechCycle);
             //修復時是否告警
-            this.checkBox_include_fix.Checked = config.IncludeFix == "Y";
+            checkBox_include_fix.Checked = config.IncludeFix == "Y";
         }
 
         /// <summary>
@@ -43,34 +43,34 @@ namespace APPEyesFree
             var voices = TTSService.GetInstalledVoice();
 
             //選單設定
-            this.comboBox_language.DisplayMember = "Name";
-            this.comboBox_language.ValueMember = "Culture";
+            comboBox_language.DisplayMember = "Name";
+            comboBox_language.ValueMember = "Culture";
 
-            this.comboBox_language.DataSource = voices;
+            comboBox_language.DataSource = voices;
         }
 
-        /// <summary>
-        /// 資料庫連線設定
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void button_connection_Click(object sender, EventArgs e)
-        {
-            using (var dialog = new ConnectionSettings())
-            {
-                //位置置中
-                dialog.StartPosition = FormStartPosition.CenterParent;
-                //彈跳視窗開啟
-                dialog.ShowDialog(this);
-            }
-        }
+        ///// <summary>
+        ///// 資料庫連線設定
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void Button_connection_Click(object sender, EventArgs e)
+        //{
+        //    using (var dialog = new ConnectionSettings())
+        //    {
+        //        //位置置中
+        //        dialog.StartPosition = FormStartPosition.CenterParent;
+        //        //彈跳視窗開啟
+        //        dialog.ShowDialog(this);
+        //    }
+        //}
 
         /// <summary>
         /// 儲存
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void button_save_Click(object sender, EventArgs e)
+        private void Button_save_Click(object sender, EventArgs e)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace APPEyesFree
                 DataAccess.ModifyConfig(config);
 
                 MessageBox.Show("Setting Saved.", "Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                this.DialogResult = DialogResult.OK;
+                DialogResult = DialogResult.OK;
             }
             catch (Exception ex)
             {
@@ -99,9 +99,9 @@ namespace APPEyesFree
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void button_cancel_Click(object sender, EventArgs e)
+        private void Button_cancel_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.Cancel;
+            DialogResult = DialogResult.Cancel;
         }
     }
 }

@@ -38,7 +38,7 @@ namespace APPEyesFree
             this.numericUpDown_volume = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown_cycle = new System.Windows.Forms.NumericUpDown();
             this.checkBox_include_fix = new System.Windows.Forms.CheckBox();
-            this.button_connection = new System.Windows.Forms.Button();
+            //this.button_connection = new System.Windows.Forms.Button();
             this.button_save = new System.Windows.Forms.Button();
             this.button_cancel = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_rate)).BeginInit();
@@ -130,16 +130,16 @@ namespace APPEyesFree
             this.checkBox_include_fix.TabIndex = 20;
             this.checkBox_include_fix.Text = "Include Fixing Device";
             this.checkBox_include_fix.UseVisualStyleBackColor = true;
-            // 
-            // button_connection
-            // 
-            this.button_connection.Location = new System.Drawing.Point(12, 158);
-            this.button_connection.Name = "button_connection";
-            this.button_connection.Size = new System.Drawing.Size(100, 25);
-            this.button_connection.TabIndex = 28;
-            this.button_connection.Text = "&ConnectionSetting";
-            this.button_connection.UseVisualStyleBackColor = true;
-            this.button_connection.Click += new System.EventHandler(this.button_connection_Click);
+            //// 
+            //// button_connection
+            //// 
+            //this.button_connection.Location = new System.Drawing.Point(12, 158);
+            //this.button_connection.Name = "button_connection";
+            //this.button_connection.Size = new System.Drawing.Size(100, 25);
+            //this.button_connection.TabIndex = 28;
+            //this.button_connection.Text = "&ConnectionSetting";
+            //this.button_connection.UseVisualStyleBackColor = true;
+            //this.button_connection.Click += new System.EventHandler(this.Button_connection_Click);
             // 
             // button_save
             // 
@@ -149,7 +149,7 @@ namespace APPEyesFree
             this.button_save.TabIndex = 19;
             this.button_save.Text = "&Save";
             this.button_save.UseVisualStyleBackColor = true;
-            this.button_save.Click += new System.EventHandler(this.button_save_Click);
+            this.button_save.Click += new System.EventHandler(this.Button_save_Click);
             // 
             // button_cancel
             // 
@@ -159,7 +159,7 @@ namespace APPEyesFree
             this.button_cancel.TabIndex = 29;
             this.button_cancel.Text = "&Cancel";
             this.button_cancel.UseVisualStyleBackColor = true;
-            this.button_cancel.Click += new System.EventHandler(this.button_cancel_Click);
+            this.button_cancel.Click += new System.EventHandler(this.Button_cancel_Click);
             // 
             // SettingsDialog
             // 
@@ -167,7 +167,7 @@ namespace APPEyesFree
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(302, 195);
             this.Controls.Add(this.button_cancel);
-            this.Controls.Add(this.button_connection);
+            //this.Controls.Add(this.button_connection);
             this.Controls.Add(this.numericUpDown_volume);
             this.Controls.Add(this.label_volume);
             this.Controls.Add(this.numericUpDown_rate);
@@ -200,7 +200,7 @@ namespace APPEyesFree
         private System.Windows.Forms.NumericUpDown numericUpDown_volume;
         private System.Windows.Forms.NumericUpDown numericUpDown_cycle;
         private System.Windows.Forms.CheckBox checkBox_include_fix;
-        private System.Windows.Forms.Button button_connection;
+        //private System.Windows.Forms.Button button_connection;
         private System.Windows.Forms.Button button_save;
         private System.Windows.Forms.Button button_cancel;
     }

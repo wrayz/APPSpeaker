@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 
 namespace APPEyesFree
 {
@@ -11,6 +12,13 @@ namespace APPEyesFree
     /// </summary>
     public static class DataAccess
     {
+        private static string _connectionsString;
+
+        static DataAccess()
+        {
+            _connectionsString = GetConnectionString();
+        }
+
         /// <summary>
         /// 告警設定取得
         /// </summary>
@@ -18,10 +26,11 @@ namespace APPEyesFree
         public static Config GetConfig()
         {
             //資料庫連線
-            var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString);
+            var connection = new SqlConnection(_connectionsString);
 
             //SQL語句
-            var sql = @"SELECT * FROM dms.VW_SPEECH_CONFIG";
+            var sql = @"SELECT SPEECH_LANGUAGE, SPEECH_RATE, SPEECH_VOLUME, SPEECH_REPAIR, SPEECH_CYCLE
+                        FROM dms.VW_TTS_CONFIG";
             //SQL執行語法
             var cmd = new SqlCommand(sql, connection);
             //Config
@@ -33,18 +42,21 @@ namespace APPEyesFree
                 //資料庫連線開啟
                 connection.Open();
                 //資料
-                var data = cmd.ExecuteReader();
+                var reader = cmd.ExecuteReader();
                 //ORA
-                while (data.Read())
+                while (reader.Read())
                 {
-                    config.Language = data["SPEECH_LANGUAGE"].ToString();
-                    config.Rate = Convert.ToInt32(data["SPEECH_RATE"]);
-                    config.Volume = Convert.ToInt32(data["SPEECH_VOLUME"]);
-                    config.IncludeFix = data["SPEECH_REPAIR"].ToString();
-                    config.SpeechCycle = Convert.ToInt32(data["SPEECH_CYCLE"]);
+                    config.Language = reader["SPEECH_LANGUAGE"].ToString();
+                    config.Rate = Convert.ToInt16(reader["SPEECH_RATE"]);
+                    config.Volume = Convert.ToInt16(reader["SPEECH_VOLUME"]);
+                    config.IncludeFix = reader["SPEECH_REPAIR"].ToString();
+                    config.SpeechCycle = Convert.ToInt16(reader["SPEECH_CYCLE"]);
 
                     break;
                 }
+
+                reader.Close();
+
                 //資料庫連線關閉
                 connection.Close();
             }
@@ -66,15 +78,15 @@ namespace APPEyesFree
         /// 異常設備清單取得
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<Device> GetErrorDevices()
+        public static IEnumerable<EventLog> GetEventLogs()
         {
             //資料庫連線
-            var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString);
+            var connection = new SqlConnection(_connectionsString);
             //異常設備清單
-            var list = new List<Device>();
+            var list = new List<EventLog>();
 
             //SQL語句
-            var sql = @"SELECT * FROM dms.VW_ERROR_DEVICE";
+            var sql = @"SELECT LOG_ID, DEVICE_NAME, LOG_TIME, LOG_INFO, IS_REPAIRING FROM elog.VW_TTS_EVENT_LOG";
             //SQL執行語法
             var cmd = new SqlCommand(sql, connection);
 
@@ -84,22 +96,24 @@ namespace APPEyesFree
                 //資料庫連線開啟
                 connection.Open();
                 //資料
-                var data = cmd.ExecuteReader();
+                var reader = cmd.ExecuteReader();
                 //ORA
-                while (data.Read())
+                while (reader.Read())
                 {
-                    var device = new Device
+                    var log = new EventLog
                     {
-                        DEVICE_SN = data["DEVICE_SN"].ToString(),
-                        DEVICE_ID = data["DEVICE_ID"].ToString(),
-                        DEVICE_NAME = data["DEVICE_NAME"].ToString(),
-                        DEVICE_STATUS = data["DEVICE_STATUS"].ToString(),
-                        ERROR_INFO = data["ERROR_INFO"].ToString(),
-                        ERROR_TIME = Convert.ToDateTime(data["ERROR_TIME"])
+                        LOG_ID = Convert.ToInt32(reader["LOG_ID"]),
+                        DEVICE_NAME = reader["DEVICE_NAME"].ToString(),
+                        LOG_TIME = Convert.ToDateTime(reader["LOG_TIME"]),
+                        LOG_INFO = reader["LOG_INFO"].ToString(),
+                        IS_REPAIRING = reader["IS_REPAIRING"].ToString()
                     };
 
-                    list.Add(device);
+                    list.Add(log);
                 }
+
+                reader.Close();
+
                 //資料庫連線關閉
                 connection.Close();
             }
@@ -118,25 +132,45 @@ namespace APPEyesFree
         }
 
         /// <summary>
-        /// 簡易告警異常設備清單取得
+        /// 告警類型事件紀錄清單取得
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<Device> GetSimpleErrorDevices()
+        public static IEnumerable<EventLog> GetAlarmLogs()
         {
             //資料庫連線
-            var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString);
+            var connection = new SqlConnection(_connectionsString);
             //異常設備清單
-            var list = new List<Device>();
-            //SPC 名稱
-            var spcName = "SPC_SIMPLE_LOG_QUERY";
+            var list = new List<EventLog>();
+
+            //SQL語句
+            var sql = @"SELECT LOG_ID, DEVICE_NAME, LOG_TIME, LOG_INFO, IS_REPAIRING FROM elog.VW_TTS_ALARM_LOG";
+            //SQL執行語法
+            var cmd = new SqlCommand(sql, connection);
 
             //執行
             try
             {
                 //資料庫連線開啟
                 connection.Open();
-                //執行SPC
-                list = GetSimpleErrorDevice(spcName, connection);
+                //資料
+                var reader = cmd.ExecuteReader();
+                //ORA
+                while (reader.Read())
+                {
+                    var log = new EventLog
+                    {
+                        LOG_ID = Convert.ToInt32(reader["LOG_ID"]),
+                        DEVICE_NAME = reader["DEVICE_NAME"].ToString(),
+                        LOG_TIME = Convert.ToDateTime(reader["LOG_TIME"]),
+                        LOG_INFO = reader["LOG_INFO"].ToString(),
+                        IS_REPAIRING = reader["IS_REPAIRING"].ToString()
+                    };
+
+                    list.Add(log);
+                }
+
+                reader.Close();
+
                 //資料庫連線關閉
                 connection.Close();
             }
@@ -161,7 +195,7 @@ namespace APPEyesFree
         public static void ModifyConfig(Config config)
         {
             //資料庫連線
-            var connection = new SqlConnection(ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString);
+            var connection = new SqlConnection(_connectionsString);
 
             //執行
             try
@@ -223,58 +257,25 @@ namespace APPEyesFree
                 transaction.Dispose();
             }
         }
-
         /// <summary>
-        /// 取得簡易異常設備
+        /// Get connection string
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="connection"></param>
-        /// <returns></returns>
-        private static List<Device> GetSimpleErrorDevice(string name, SqlConnection connection)
+        private static string GetConnectionString()
         {
-            //異常設備清單
-            var list = new List<Device>();
-            //交易建立
-            var transaction = connection.BeginTransaction();
+#if DEBUG
+            return ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
+#else
+            // Config name
+            var configName = @"App.config";
+            // Config path
+            var configPath = Path.Combine(string.Format("{0}\\Config", Environment.CurrentDirectory), configName);
 
-            try
-            {
-                //SQL Procedure cmd
-                var cmd = new SqlCommand("dms.SPC_SIMPLE_LOG_QUERY", connection, transaction) { CommandType = CommandType.StoredProcedure };
+            var map = new ExeConfigurationFileMap { ExeConfigFilename = configPath };
 
-                //資料
-                var reader = cmd.ExecuteReader();
-                //ORA
-                while (reader.Read())
-                {
-                    var device = new Device
-                    {
-                        DEVICE_SN = reader["DEVICE_SN"].ToString(),
-                        DEVICE_ID = reader["DEVICE_ID"].ToString(),
-                        DEVICE_NAME = reader["DEVICE_NAME"].ToString(),
-                        ERROR_INFO = reader["ERROR_INFO"].ToString(),
-                        ERROR_TIME = Convert.ToDateTime(reader["ERROR_TIME"])
-                    };
+            var config = ConfigurationManager.OpenMappedExeConfiguration(map, ConfigurationUserLevel.None);
 
-                    list.Add(device);
-                }
-                reader.Close();
-                //交易提交
-                transaction.Commit();
-            }
-            catch (Exception ex)
-            {
-                if (transaction.Connection != null)
-                    //交易返回
-                    transaction.Rollback();
-                throw ex;
-            }
-            finally
-            {
-                transaction.Dispose();
-            }
-
-            return list;
+            return config.ConnectionStrings.ConnectionStrings["connectionString"].ConnectionString;
+#endif
         }
     }
 }

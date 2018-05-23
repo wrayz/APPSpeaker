@@ -109,7 +109,7 @@
             this.button_test_connection.TabIndex = 32;
             this.button_test_connection.Text = "&Test";
             this.button_test_connection.UseVisualStyleBackColor = true;
-            this.button_test_connection.Click += new System.EventHandler(this.button_test_connection_Click);
+            this.button_test_connection.Click += new System.EventHandler(this.Button_test_connection_Click);
             // 
             // button_save
             // 
@@ -119,7 +119,7 @@
             this.button_save.TabIndex = 40;
             this.button_save.Text = "&Connect";
             this.button_save.UseVisualStyleBackColor = true;
-            this.button_save.Click += new System.EventHandler(this.button_save_Click);
+            this.button_save.Click += new System.EventHandler(this.Button_save_Click);
             // 
             // textBox_server
             // 
