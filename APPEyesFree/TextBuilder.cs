@@ -1,5 +1,5 @@
-﻿using Microsoft.Speech.Synthesis;
-using System.Globalization;
+﻿using System.Globalization;
+using System.Speech.Synthesis;
 
 namespace APPEyesFree
 {

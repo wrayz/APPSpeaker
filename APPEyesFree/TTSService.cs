@@ -1,9 +1,9 @@
-﻿using Microsoft.Speech.Synthesis;
-using Microsoft.Win32.SafeHandles;
+﻿using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Speech.Synthesis;
 
 namespace APPEyesFree
 {
@@ -49,26 +49,16 @@ namespace APPEyesFree
         /// <param name="config"></param>
         public void SetConfig(Config config)
         {
-            try
-            {
-                //語言
-                Language = config.Language;
-                //語音速度
-                _synth.Rate = config.Rate.Value;
-                //語音音量
-                _synth.Volume = config.Volume.Value;
-                //語言
-                _synth.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Adult, 1, Culture);
-                //設定輸出
-                _synth.SetOutputToDefaultAudioDevice();
-            }
-            catch (Exception ex)
-            {
-                if (ex is InvalidOperationException)
-                    throw new Exception("Audio service on this device is not found. Please check audio service on this device.");
-
-                throw ex;
-            }
+            //語言
+            Language = config.Language;
+            //語音速度
+            _synth.Rate = config.Rate.Value;
+            //語音音量
+            _synth.Volume = config.Volume.Value;
+            //語言
+            _synth.SelectVoiceByHints(VoiceGender.Male, VoiceAge.Adult, 1, Culture);
+            //設定輸出
+            _synth.SetOutputToDefaultAudioDevice();
         }
 
         /// <summary>
@@ -103,20 +93,7 @@ namespace APPEyesFree
         /// <param name="builders">文字內容物件</param>
         public void Speech(PromptBuilder builder)
         {
-            try
-            {
-                _synth.Speak(builder);
-            }
-            catch (Exception ex)
-            {
-                if (ex is InvalidOperationException)
-                    throw new Exception("DLL missing, please read setup guide to fix this problem.");
-
-                if (ex is BadImageFormatException)
-                    throw ex;
-
-                return;
-            }
+            _synth.Speak(builder);
         }
 
         /// <summary>
